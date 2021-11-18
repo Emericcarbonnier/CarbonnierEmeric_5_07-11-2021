@@ -16,16 +16,29 @@ const colors = document.getElementById ('colors')
 
 fetch('http://localhost:3300/api/products/' + newId)
 .then(response => response.json())
-.then((products) => {
+.then((product) => {
     // Verification de l'extraction du tableau depuis l'API
-    console.log(products);
-    console.log (products.name)
+    console.log(product);
+    console.log (product.name)
 
     
     // ont prend les valeurs du tableau 'products' pour les assigné au html
-        img[0].innerHTML = `<img src="${products.imageUrl}" alt="${products.altTxt}">`;
-        title.innerHTML = `<h1>${products.name}</h1>`;
-        price.innerText = `${products.price}`;
-        description.innerText = `${products.description}`;
-    
+    console.log(img)
+
+        img[0].innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+        title.innerHTML = `<h1>${product.name}</h1>`;
+        price.innerText = `${product.price}`;
+        description.innerText = `${product.description}`;
+
+        console.log(product.colors)
+        console.log(colors.options)
+        
+        // choix de la couleur
+
+        for (number in product.colors) {
+            colors.options[colors.options.length] = new Option(
+              product.colors[number]
+            );
+          }
     })
+
