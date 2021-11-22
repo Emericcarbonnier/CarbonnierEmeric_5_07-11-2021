@@ -77,23 +77,20 @@ addData.addEventListener('click', (event) => {
   //    let selectColors = document.getElementById('colors').value;
   //    localStorage.setItem('quantity', selectColors) 
   // }
-  
 let productInLocalStorage = JSON.parse(localStorage.getItem("product"));
 
-const
 // console.log (productInLocalStorage)
 
 if(productInLocalStorage){
   productInLocalStorage.push(choiceProduct);
   localStorage.setItem("product", JSON.stringify(productInLocalStorage))
   console.log (productInLocalStorage)
- 
 }
 else{
-
+  
   // on creer le array de choix de produit
   productInLocalStorage = [];
-
+  
   // on push "choiceProduct"
   productInLocalStorage.push(choiceProduct);
 
