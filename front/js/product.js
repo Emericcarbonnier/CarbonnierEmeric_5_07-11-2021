@@ -42,3 +42,62 @@ fetch('http://localhost:3300/api/products/' + newId)
           }
     })
 
+// creation de la constante du boutton
+
+const addData = document.getElementById('addToCart');
+
+addData.addEventListener('click', (event) => {
+  event.preventDefault();
+
+  const selectQuantity = document.getElementById('quantity');
+  const selectColors = document.getElementById('colors');
+
+// récuperation des donnée du produit choisi
+
+  let choiceProduct = {
+    id: newId,
+    name: title.textContent,
+    price: price.textContent,
+    color: selectColors.value,
+    quantity: selectQuantity.value,
+  };
+  console.log(choiceProduct);
+
+// const selectQuantity = document.getElementById('quantity');
+
+  // console.log (selectQuantity.value)
+
+  // const selectColors = document.getElementById('colors');
+
+  // console.log (selectColors.value)
+
+  // function setData(){
+  //   let selectQuantity = document.getElementById('quantity').value;
+  //    localStorage.setItem('quantity', selectQuantity)   
+  //    let selectColors = document.getElementById('colors').value;
+  //    localStorage.setItem('quantity', selectColors) 
+  // }
+  
+let productInLocalStorage = JSON.parse(localStorage.getItem("product"));
+
+const
+// console.log (productInLocalStorage)
+
+if(productInLocalStorage){
+  productInLocalStorage.push(choiceProduct);
+  localStorage.setItem("product", JSON.stringify(productInLocalStorage))
+  console.log (productInLocalStorage)
+ 
+}
+else{
+
+  // on creer le array de choix de produit
+  productInLocalStorage = [];
+
+  // on push "choiceProduct"
+  productInLocalStorage.push(choiceProduct);
+
+  // on envoie le choix dans le local storage
+  localStorage.setItem("product", JSON.stringify(productInLocalStorage))
+}
+});
