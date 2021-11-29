@@ -1,31 +1,33 @@
 let params = new URL(window.location.href).searchParams;
-console.log (params)
 
 let newId = params.get('id');
 console.log (newId)
 
 // création des constante que l'ont va utilisé dans le html
 
-const img = document.getElementsByClassName ('item__img')
-const title = document.getElementById ('title')
-const price = document.getElementById ('price')
-const desciption = document.getElementById ('description')
-const colors = document.getElementById ('colors')
-
-
+const img = document.getElementsByClassName('item__img')
+const title = document.getElementById('title')
+const price = document.getElementById('price')
+const desciption = document.getElementById('description')
+const colors = document.getElementById('colors')
+const addData = document.getElementById('addToCart');
+const selectQuantity = document.getElementById('quantity');
+const selectColors = document.getElementById('colors');
+let imgSrc = "";
+let imgAlt = "";
 
 fetch('http://localhost:3300/api/products/' + newId)
 .then(response => response.json())
 .then((product) => {
     // Verification de l'extraction du tableau depuis l'API
     console.log(product);
-    console.log (product.name)
 
     
     // ont prend les valeurs du tableau 'products' pour les assigné au html
-    console.log(img)
 
         img[0].innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+        imgSrc = product.imageUrl;
+        imgAlt = product.altTxt;
         title.innerHTML = `<h1>${product.name}</h1>`;
         price.innerText = `${product.price}`;
         description.innerText = `${product.description}`;
@@ -44,18 +46,19 @@ fetch('http://localhost:3300/api/products/' + newId)
 
 // creation de la constante du boutton
 
-const addData = document.getElementById('addToCart');
+
 
 addData.addEventListener('click', (event) => {
   event.preventDefault();
 
-  const selectQuantity = document.getElementById('quantity');
-  const selectColors = document.getElementById('colors');
+
 
 // récuperation des donnée du produit choisi
 
   let choiceProduct = {
     id: newId,
+    image: imgSrc,
+    alt: imgAlt,
     name: title.textContent,
     price: price.textContent,
     color: selectColors.value,
@@ -63,38 +66,122 @@ addData.addEventListener('click', (event) => {
   };
   console.log(choiceProduct);
 
-// const selectQuantity = document.getElementById('quantity');
 
-  // console.log (selectQuantity.value)
+let productInCart = JSON.parse(localStorage.getItem("product"));
 
-  // const selectColors = document.getElementById('colors');
-
-  // console.log (selectColors.value)
-
-  // function setData(){
-  //   let selectQuantity = document.getElementById('quantity').value;
-  //    localStorage.setItem('quantity', selectQuantity)   
-  //    let selectColors = document.getElementById('colors').value;
-  //    localStorage.setItem('quantity', selectColors) 
-  // }
-let productInLocalStorage = JSON.parse(localStorage.getItem("product"));
-
-// console.log (productInLocalStorage)
-
-if(productInLocalStorage){
-  productInLocalStorage.push(choiceProduct);
-  localStorage.setItem("product", JSON.stringify(productInLocalStorage))
-  console.log (productInLocalStorage)
-}
-else{
+const addProductInCart = () => {
+  productInCart.push(choiceProduct);
+  // ont converti au format JSON
+  localStorage.setItem('product', JSON.stringify(productInCart));
+  }
   
-  // on creer le array de choix de produit
-  productInLocalStorage = [];
+  let update = false;
   
-  // on push "choiceProduct"
-  productInLocalStorage.push(choiceProduct);
+  // s'il y a des produits enregistrés dans le localStorage
+  if (productInCart) {
+  // verifier que le produit choisi n'esrt pas deja dans le panier
+   productInCart.forEach (function (productOk, key) {
 
-  // on envoie le choix dans le local storage
-  localStorage.setItem("product", JSON.stringify(productInLocalStorage))
-}
+    if (productOk.id == newId && productOk.color == selectColors.value) {
+      productInCart[key].quantity = parseInt(productOk.quantity) + parseInt(selectQuantity.value);
+
+      localStorage.setItem('product', JSON.stringify(productInCart));
+      update = true;
+    }
+  });
+
+  if (!update) {
+    addProductInCart();
+    }
+  }
+
+  // s'il n'y a aucun produit dans le panier
+  else {
+    // je crée un nouveay array avec les éléments choisi par l'utilisateur
+    productInCart = [];
+    addProductInCart();
+  }
 });
+
+
+
+
+
+// function initCart(cart){
+    
+//     if(!cart){
+//          localStorage.setItem([])
+//     }
+  
+// }
+
+
+
+// initCart(cart)
+
+// // Ajouter un produit au localstorage (cart = panier)
+// function addProductToCart(){
+
+
+// // récuperation des donnée du produit choisi
+// //     [
+// //         {
+// //     id: 123,
+// //     name: 'Kanap 1',
+// //     price: 1990,
+// //     selectedColor: 'green',
+// //     quantity: 2,
+// //   },
+// //         {
+// //     id: 1235,
+// //     name: 'Kanap 1',
+// //     price: 1990,
+// //     selectedColor: 'green',
+// //     quantity: 2,
+// //   },
+// //        {
+// //     id: 12388,
+// //     name: 'Kanap 3',
+// //     price: 1990,
+// //     selectedColor: 'green',
+// //     quantity: 2,
+// //   }
+// //     ]
+
+//   let choiceProduct = {
+//     id: newId,
+//     name: title.textContent,
+//     price: price.textContent,
+//     color: selectColors.value,
+//     quantity: selectQuantity.value,
+//   };
+
+    
+//       if(cart.contain(choiceProduct)){
+//         // update la quantity
+//              // recuperer le produit grace a l'id et sa couleur
+//                 const product = cart.find(id, selectedColor)
+//             // update qty +1 ou +2
+//                 product.quantity =  product.quantity+1
+          
+//             return localStorage.setItem("cart", JSON.stringify(cart))
+
+      
+//       }
+    
+//     // Ajout dans le tableau du panier
+//     cart.push(choiceProduct)
+    
+    
+    
+//     // Enregister le panier dans le localstorage
+//      localStorage.setItem("cart", JSON.stringify(cart))
+
+
+// }
+
+// // Modifier la quantity d'un produit du panier
+// function updateQantityProduct(){}
+
+// // Supprimer un produit du panier
+// function deleteProductFromCart(){}
