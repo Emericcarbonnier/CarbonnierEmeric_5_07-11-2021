@@ -80,10 +80,10 @@ const addProductInCart = () => {
   // s'il y a des produits enregistrés dans le localStorage
   if (productInCart) {
   // verifier que le produit choisi n'esrt pas deja dans le panier
-   productInCart.forEach (function (productOk, key) {
+   productInCart.forEach (function (product, key) {
 
-    if (productOk.id == newId && productOk.color == selectColors.value) {
-      productInCart[key].quantity = parseInt(productOk.quantity) + parseInt(selectQuantity.value);
+    if (product.id == newId && product.color == selectColors.value) {
+      productInCart[key].quantity = parseInt(product.quantity) + parseInt(selectQuantity.value);
 
       localStorage.setItem('product', JSON.stringify(productInCart));
       update = true;

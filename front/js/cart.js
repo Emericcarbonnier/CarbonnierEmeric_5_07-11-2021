@@ -4,9 +4,6 @@ let productInCart = JSON.parse(localStorage.getItem('product'));
 
 function addProductInCart(){
 
-let cartAndFormContainer = document.getElementById('cartAndFormContainer');
-
-
   let itemCards = [];
  
 // i correspond au nombre d'entré dans le tablezau panier
@@ -48,6 +45,7 @@ addProductInCart()
 
 
 // function deleteProduct(){
+
 // let deleteProductInCart = document.querySelectorAll(".deleteItem");
 // console.log(deleteProductInCart)
 
@@ -56,6 +54,7 @@ addProductInCart()
 //     event.preventDefault()
 //   }
  
+
 
 
 // }
