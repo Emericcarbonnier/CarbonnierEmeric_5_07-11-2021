@@ -15,6 +15,9 @@ const selectQuantity = document.getElementById('quantity');
 const selectColors = document.getElementById('colors');
 let imgSrc = "";
 let imgAlt = "";
+let confirmItemAddToCart = () => {
+  alert('Le produit a bien été ajouté au panier');
+}
 
 fetch('http://localhost:3300/api/products/' + newId)
 .then(response => response.json())
@@ -87,11 +90,13 @@ const addProductInCart = () => {
 
       localStorage.setItem('product', JSON.stringify(productInCart));
       update = true;
+      confirmItemAddToCart();
     }
   });
 
   if (!update) {
     addProductInCart();
+    confirmItemAddToCart();
     }
   }
 
@@ -100,88 +105,6 @@ const addProductInCart = () => {
     // je crée un nouveay array avec les éléments choisi par l'utilisateur
     productInCart = [];
     addProductInCart();
+    confirmItemAddToCart();
   }
 });
-
-
-
-
-
-// function initCart(cart){
-    
-//     if(!cart){
-//          localStorage.setItem([])
-//     }
-  
-// }
-
-
-
-// initCart(cart)
-
-// // Ajouter un produit au localstorage (cart = panier)
-// function addProductToCart(){
-
-
-// // récuperation des donnée du produit choisi
-// //     [
-// //         {
-// //     id: 123,
-// //     name: 'Kanap 1',
-// //     price: 1990,
-// //     selectedColor: 'green',
-// //     quantity: 2,
-// //   },
-// //         {
-// //     id: 1235,
-// //     name: 'Kanap 1',
-// //     price: 1990,
-// //     selectedColor: 'green',
-// //     quantity: 2,
-// //   },
-// //        {
-// //     id: 12388,
-// //     name: 'Kanap 3',
-// //     price: 1990,
-// //     selectedColor: 'green',
-// //     quantity: 2,
-// //   }
-// //     ]
-
-//   let choiceProduct = {
-//     id: newId,
-//     name: title.textContent,
-//     price: price.textContent,
-//     color: selectColors.value,
-//     quantity: selectQuantity.value,
-//   };
-
-    
-//       if(cart.contain(choiceProduct)){
-//         // update la quantity
-//              // recuperer le produit grace a l'id et sa couleur
-//                 const product = cart.find(id, selectedColor)
-//             // update qty +1 ou +2
-//                 product.quantity =  product.quantity+1
-          
-//             return localStorage.setItem("cart", JSON.stringify(cart))
-
-      
-//       }
-    
-//     // Ajout dans le tableau du panier
-//     cart.push(choiceProduct)
-    
-    
-    
-//     // Enregister le panier dans le localstorage
-//      localStorage.setItem("cart", JSON.stringify(cart))
-
-
-// }
-
-// // Modifier la quantity d'un produit du panier
-// function updateQantityProduct(){}
-
-// // Supprimer un produit du panier
-// function deleteProductFromCart(){}

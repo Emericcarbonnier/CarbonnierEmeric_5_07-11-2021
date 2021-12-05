@@ -1,60 +1,115 @@
-// ont extrait le panier du localstorage
-let products = [];
-let productInCart = JSON.parse(localStorage.getItem('product'));
+let productsInCart = getCartFromLocalStorage('product');
 
-function addProductInCart(){
 
-  let itemCards = [];
- 
-// i correspond au nombre d'entré dans le tablezau panier
-  for (i = 0; i < productInCart.length; i++) {
-  products.push(productInCart[i].id);
- 
-  // ont met en place le html du panier pour chaque entré
-  itemCards = itemCards + `
-    
-    <article class="cart__item" data-id="${productInCart[i].id}" data-color="${productInCart.color}">
-    <div class="cart__item__img">
-      <img src="${productInCart[i].image}" alt="${productInCart[i].alt}">
+function getCartFromLocalStorage($key) {
+  return JSON.parse(localStorage.getItem($key))
+}
+
+function createHtmlForCart(productItem) {
+
+  return `<article class="cart__item" data-id="${productItem.id}" data-color="${productItem.color}">
+  <div class="cart__item__img">
+    <img src="${productItem.image}" alt="${productItem.alt}">
+  </div>
+  <div class="cart__item__content">
+    <div class="cart__item__content__titlePrice">
+      <h2>${productItem.name}</h2>
+      <p>${productItem.color}</p>
+      <p>${productItem.price} €</p>
     </div>
-    <div class="cart__item__content">
-      <div class="cart__item__content__titlePrice">
-        <h2>${productInCart[i].name}</h2>
-        <p>${productInCart[i].color}</p>
-        <p>${productInCart[i].price} €</p>
+    <div class="cart__item__content__settings">
+      <div class="cart__item__content__settings__quantity">
+        <p>Qté : </p>
+        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productItem.quantity}">
       </div>
-      <div class="cart__item__content__settings">
-        <div class="cart__item__content__settings__quantity">
-          <p>Qté : </p>
-          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productInCart[i].quantity}">
-        </div>
-        <div class="cart__item__content__settings__delete">
-          <p class="deleteItem">Supprimer</p>
-        </div>
+      <div class="cart__item__content__settings__delete">
+        <p class="deleteItem">Supprimer</p>
       </div>
     </div>
-  </article>
-    `;
+  </div>
+</article>`
+}
+
+// Display all product from cart
+function displayProductsFromCart() {
+
+  let itemCartHtml = '';
+
+  productsInCart.forEach((productItem) => {
+    itemCartHtml = itemCartHtml + createHtmlForCart(productItem);
+  })
+
+  if (productsInCart.length > 0) {
+    const $itemCart = document.getElementById('cart__items');
+    $itemCart.innerHTML = itemCartHtml;
   }
-  if (i === productInCart.length) {
-  const itemCart = document.getElementById('cart__items');
-  itemCart.innerHTML += itemCards;
-  }}
+}
 
-addProductInCart()
+function deleteProductFromCart() {
+  let $deleteLinkProduct = document.querySelectorAll('.deleteItem');
+
+  $deleteLinkProduct.forEach((deleteElement) => {
+    deleteElement.addEventListener('click', (event) => {
+      event.preventDefault();
+  
+      // Recuperer le parent node de l'element cliqué
+      let element = deleteElement.closest('.cart__item');
+  
+      let productId = element.getAttribute('data-id');
+      let productColor = element.getAttribute('data-color');
+  
+      let productIndexToDelete = productsInCart.findIndex((product) => {
+        return productColor === product.color && productId === product.id
+      })
+  
+      console.log(productsInCart)
+      console.log(productIndexToDelete)
+  
+  
+      // Delete to localstorage
+  
+      element.remove();
+      productsInCart = productsInCart.filter( elt => elt.id !== productId || elt.color !== productColor);
+    
+      localStorage.setItem('product', JSON.stringify(productsInCart));
+      console.log('click delete :' + productId + ' ' + productColor)
+      alert('Votre article a bien été supprimé.');
+    })
+  })
+}
+
+  function totalArticlesOfCart() {
+    let totalItems = 0;
+    productsInCart.forEach((product) => {
+      
+      const newQuantity = parseInt(product.quantity, 10);
+      totalItems += newQuantity;
+    
+      const totalQuantity = document.getElementById('totalQuantity');
+      totalQuantity.textContent = totalItems;
+    })
+  }
+
+  function TotalPriceOfCart() {
+      const calculPrice = [];
+      productsInCart.forEach((product) => {
+
+        const cartAmount = product.price * product.quantity;
+        calculPrice.push(cartAmount);
+    
+    
+        const reduce = (previousValue, currentValue) => previousValue + currentValue;
+        total = calculPrice.reduce(reduce);
+      })
+      const totalPrice = document.getElementById('totalPrice');
+      totalPrice.textContent = total;
+    }
 
 
-// function deleteProduct(){
+displayProductsFromCart()
 
-// let deleteProductInCart = document.querySelectorAll(".deleteItem");
-// console.log(deleteProductInCart)
+deleteProductFromCart()
 
-// for (d = 0; d < deleteProductInCart.length; d++) {
-//   deleteProductInCart[d].addEventListener("click", (event) =>{
-//     event.preventDefault()
-//   }
- 
+totalArticlesOfCart();
 
-
-
-// }
+TotalPriceOfCart();
