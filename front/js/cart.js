@@ -81,7 +81,7 @@ function deleteProductFromCart() {
   function totalArticlesOfCart() {
     let totalItems = 0;
     productsInCart.forEach((product) => {
-      
+
       const newQuantity = parseInt(product.quantity, 10);
       totalItems += newQuantity;
     
@@ -113,3 +113,124 @@ deleteProductFromCart()
 totalArticlesOfCart();
 
 TotalPriceOfCart();
+
+function changeQtt() {
+  let $itemQuantity = document.getElementById('#itemQuantity');
+
+  $itemQuantity.forEach((product) => {
+    product.addEventListener("change" , (event) => {
+      event.preventDefault();
+
+      let itemNewQtt = $itemQuantity.value;
+
+  
+
+     
+
+    localStorage.setItem('product', JSON.stringify(productsInCart));
+
+
+    alert('Votre panier est à jour.');
+    totalArticles();
+    priceAmount();
+      })
+  }
+  )}
+
+
+changeQtt();
+
+
+
+
+
+
+function postForm() {
+  const order = document.getElementById('order');
+  order.addEventListener('click', (event) => {
+  event.preventDefault();
+
+  const contact = {
+    firstName : document.getElementById('firstName').value,
+    lastName : document.getElementById('lastName').value,
+    address : document.getElementById('address').value,
+    city : document.getElementById('city').value,
+    email : document.getElementById('email').value
+  }
+
+  
+  function controlFirstName() {
+    const validFirstName = contact.firstName;
+    if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validFirstName)) {
+      return true;
+    } else {
+      let firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
+      firstNameErrorMsg.innerText = "Merci de vérifier le prénom";
+    }
+  } 
+
+  // contrôle nom
+  function controlName() {
+    const validName = contact.lastName;
+    if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validName)) {
+      return true;
+    } else {
+      let lastNameErrorMsg = document.getElementById('lastNameErrorMsg');
+      lastNameErrorMsg.innerText = "Merci de vérifier le nom";
+    }
+  }
+
+  // contrôle adresse
+  function controlAddress() {
+    const validAddress = contact.address;
+    if (/\d{2}[ ]?\d{3}$/.test(validAddress)) {
+      return true;
+    } else {
+      let addressErrorMsg = document.getElementById('addressErrorMsg');
+      addressErrorMsg.innerText = "Merci de vérifier l'adresse";
+    }
+  } 
+
+  // contrôle ville
+  function controlCity() {
+    const validAddress = contact.city;
+    if (/^[^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,10}$/.test(validAddress)) {
+      return true;
+    } else {
+      let cityErrorMsg = document.getElementById('cityErrorMsg');
+      cityErrorMsg.innerText = "Merci de vérifier le nom de la ville";
+    }
+  }
+
+  // contrôle email
+  function controlEmail() {
+    const validEmail = contact.email;
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(validEmail)) {
+      return true;
+    } else {
+      let emailErrorMsg = document.getElementById('emailErrorMsg');
+      emailErrorMsg.innerText = "Email non valide";
+    }
+  }
+
+
+  function validControl() {
+    if (controlFirstName() && controlName() && controlAddress() && controlCity() && controlEmail()) {
+      localStorage.setItem('contact', JSON.stringify(contact));
+      return true;
+    } else {
+        alert('Merci de vérifier les données du formulaire')
+      }
+  }
+
+  validControl()
+
+  const sendFormData = {
+    contact,
+    products,
+  }
+
+})
+} 
+
+postForm();
