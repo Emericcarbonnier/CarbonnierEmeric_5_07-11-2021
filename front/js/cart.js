@@ -58,27 +58,26 @@ function deleteProductFromCart() {
       let productId = element.getAttribute('data-id');
       let productColor = element.getAttribute('data-color');
   
-      let productIndexToDelete = productsInCart.findIndex((product) => {
-        return productColor === product.color && productId === product.id
-      })
-  
-      console.log(productsInCart)
-      console.log(productIndexToDelete)
-  
+      let productIndexToDelete = productsInCart.findIndex((product) => productColor === product.color && productId === product.id);
   
       // Delete to localstorage
   
       element.remove();
-      productsInCart = productsInCart.filter( elt => elt.id !== productId || elt.color !== productColor);
+      
+      productsInCart.splice(productIndexToDelete, 1);
     
       localStorage.setItem('product', JSON.stringify(productsInCart));
-      console.log('click delete :' + productId + ' ' + productColor)
+
+
       alert('Votre article a bien été supprimé.');
+      
+      totalArticlesOfCart();
+      TotalPriceOfCart();
     })
   })
 }
 
-  function totalArticlesOfCart() {
+function totalArticlesOfCart() {
     let totalItems = 0;
     productsInCart.forEach((product) => {
 
@@ -90,7 +89,7 @@ function deleteProductFromCart() {
     })
   }
 
-  function TotalPriceOfCart() {
+function TotalPriceOfCart() {
       const calculPrice = [];
       productsInCart.forEach((product) => {
 
@@ -105,6 +104,40 @@ function deleteProductFromCart() {
       totalPrice.textContent = total;
     }
 
+function changeQtt() {
+      let $itemQuantity = document.querySelectorAll('.itemQuantity');
+    
+    
+    
+      $itemQuantity.forEach((itemQuantity) => {
+        itemQuantity.addEventListener('change' ,(event) => {
+          event.preventDefault();
+    
+          let element = itemQuantity.closest('.cart__item');  
+          let productId = element.getAttribute('data-id');
+          let productColor = element.getAttribute('data-color');
+      
+          let productIndexToModifyQuantity = productsInCart.findIndex((product) => {
+            return productColor === product.color && productId === product.id
+          })
+    
+    console.log(productIndexToModifyQuantity)
+    
+    
+    productsInCart[productIndexToModifyQuantity].quantity = event.target.value;
+    
+    
+          localStorage.setItem('product', JSON.stringify(productsInCart));
+    
+     
+    
+    
+        alert('Votre panier est à jour.');
+        totalArticlesOfCart();
+        TotalPriceOfCart();
+          })
+      }
+      )}
 
 displayProductsFromCart()
 
@@ -114,28 +147,7 @@ totalArticlesOfCart();
 
 TotalPriceOfCart();
 
-function changeQtt() {
-  let $itemQuantity = document.getElementById('#itemQuantity');
 
-  $itemQuantity.forEach((product) => {
-    product.addEventListener("change" , (event) => {
-      event.preventDefault();
-
-      let itemNewQtt = $itemQuantity.value;
-
-  
-
-     
-
-    localStorage.setItem('product', JSON.stringify(productsInCart));
-
-
-    alert('Votre panier est à jour.');
-    totalArticles();
-    priceAmount();
-      })
-  }
-  )}
 
 
 changeQtt();
@@ -183,7 +195,7 @@ function postForm() {
   // contrôle adresse
   function controlAddress() {
     const validAddress = contact.address;
-    if (/\d{2}[ ]?\d{3}$/.test(validAddress)) {
+    if (/^[^_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{3,20}$/.test(validAddress)) {
       return true;
     } else {
       let addressErrorMsg = document.getElementById('addressErrorMsg');
