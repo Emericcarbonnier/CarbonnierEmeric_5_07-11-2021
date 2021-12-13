@@ -1,4 +1,4 @@
-fetch('http://localhost:3300/api/products')
+fetch('http://localhost:3000/api/products')
 .then(response => response.json())
 .then((products) => {
     // Verification de l'extraction du tableau depuis l'API

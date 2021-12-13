@@ -19,7 +19,7 @@ let confirmItemAddToCart = () => {
   alert('Le produit a bien été ajouté au panier');
 }
 
-fetch('http://localhost:3300/api/products/' + newId)
+fetch('http://localhost:3000/api/products/' + newId)
 .then(response => response.json())
 .then((product) => {
     // Verification de l'extraction du tableau depuis l'API
