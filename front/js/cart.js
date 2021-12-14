@@ -145,7 +145,7 @@ function postForm() {
   order.addEventListener("click", (event) => {
     event.preventDefault();
 
-    const regexEmail = /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/;
+  const regexEmail = /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/;
    const regexAddress = /^[a-zA-Z0-9\s,.'-]{3,}$/;
    const regexLetter = /^[a-zA-Z-]+$/;
    
@@ -232,7 +232,7 @@ function postForm() {
 
     const sendOrder = {
       contact,
-      productsInCart,
+      'products':productsInCart.reduce((previous,current) => [...previous,current.id],[]) 
     };
 
     // // const options = {
@@ -242,6 +242,7 @@ function postForm() {
     // //     'Content-Type': 'application/json',
     // //   }
     // };
+
     fetch("http://localhost:3000/api/products/order", {
      
       method: "POST",
@@ -250,11 +251,16 @@ function postForm() {
           "Content-type": "application/json; charset=UTF-8"
       }
   })
+
   .then(response => response.json())
-  .then(data => 
-    console.log(data)
+  .then(data =>
+    localStorage.setItem('orderId', data.orderId)
     );
-  }) 
+    if (validControl()) {
+      document.location.href = 'confirmation.html'
+    }
+  }
+  ) 
   } 
 
 postForm();
