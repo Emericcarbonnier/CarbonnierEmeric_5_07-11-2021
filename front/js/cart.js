@@ -4,6 +4,7 @@ function getCartFromLocalStorage($key) {
   return JSON.parse(localStorage.getItem($key));
 }
 
+// fonction pour creer la partie HTML de la page produit
 function createHtmlForCart(productItem) {
   return `<article class="cart__item" data-id="${productItem.id}" data-color="${productItem.color}">
   <div class="cart__item__img">
@@ -28,7 +29,7 @@ function createHtmlForCart(productItem) {
 </article>`;
 }
 
-// Display all product from cart
+// afficher les produit du local storage dans le panier
 
 function displayProductsFromCart() {
   let itemCartHtml = "";
@@ -42,7 +43,7 @@ function displayProductsFromCart() {
     $itemCart.innerHTML = itemCartHtml;
   }
 }
-
+// fonction pour effacé un produit du panier
 function deleteProductFromCart() {
   let $deleteLinkProduct = document.querySelectorAll(".deleteItem");
 
@@ -76,6 +77,7 @@ function deleteProductFromCart() {
   });
 }
 
+// Fonction pour calculé le nombre total d'article dans le panier
 function totalArticlesOfCart() {
   let totalItems = 0;
   productsInCart.forEach((product) => {
@@ -87,6 +89,7 @@ function totalArticlesOfCart() {
   });
 }
 
+// fonction pour calculé le prix total du panier
 function TotalPriceOfCart() {
   const calculPrice = [];
   productsInCart.forEach((product) => {
@@ -101,6 +104,7 @@ function TotalPriceOfCart() {
   totalPrice.textContent = total;
 }
 
+// fonction permettant de changé la quantité souhaité d'un article
 function changeQtt() {
   let $itemQuantity = document.querySelectorAll(".itemQuantity");
 
@@ -132,23 +136,30 @@ function changeQtt() {
 
 displayProductsFromCart();
 
+
 deleteProductFromCart();
+
 
 totalArticlesOfCart();
 
+
 TotalPriceOfCart();
+
 
 changeQtt();
 
+// fonction globale pour le formulaire
 function postForm() {
   const order = document.getElementById("order");
   order.addEventListener("click", (event) => {
     event.preventDefault();
 
+//  mise en place des regex 
   const regexEmail = /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/;
    const regexAddress = /^[a-zA-Z0-9\s,.'-]{3,}$/;
    const regexLetter = /^[a-zA-Z-]+$/;
    
+
     const contact = {
       firstName: document.getElementById("firstName").value,
       lastName: document.getElementById("lastName").value,
@@ -157,6 +168,7 @@ function postForm() {
       email: document.getElementById("email").value,
     };
 
+    // contrôle prenom
     function controlFirstName() {
       const validFirstName = contact.firstName;
       if (
@@ -213,6 +225,7 @@ function postForm() {
       }
     }
 
+    // si tout les champs sont valide, ont envoie les information dans le localstorage, si non un message d'erreur apparait
     function validControl() {
       if (
         controlFirstName() &&
@@ -230,19 +243,14 @@ function postForm() {
 
     validControl();
 
+
+
     const sendOrder = {
       contact,
       'products':productsInCart.reduce((previous,current) => [...previous,current.id],[]) 
     };
 
-    // // const options = {
-    // //   method: 'POST',
-    // //   body: JSON.stringify(sendOrder),
-    // //   headers: { 
-    // //     'Content-Type': 'application/json',
-    // //   }
-    // };
-
+    // ont envoie les information a l'API, method POST
     fetch("http://localhost:3000/api/products/order", {
      
       method: "POST",
