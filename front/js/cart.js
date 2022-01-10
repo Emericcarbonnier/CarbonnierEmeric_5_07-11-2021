@@ -105,6 +105,18 @@ function TotalPriceOfCart() {
 }
 
 // fonction permettant de changé la quantité souhaité d'un article
+
+function checkItem(productname) {
+  let itemSelect = JSON.parse(localStorage.getItem('product'));
+  let array = [true, 0];
+  for (i = 0; i < itemSelect.length; i++) {
+     if(productname == itemSelect[i].name) {
+        array[1] = i;
+        return array;
+     }
+  }
+}
+
 function changeQtt() {
   let $itemQuantity = document.querySelectorAll(".itemQuantity");
 
@@ -121,7 +133,12 @@ function changeQtt() {
       });
 
       console.log(productIndexToModifyQuantity);
+      var getCount = itemQuantity.closest('.cart__item');
+      var productCount = event.target.value;
+      var getCountParent = getCount.querySelector('div.cart__item__content__titlePrice > h2').innerText;
 
+      
+      if(checkItem(getCountParent) && productCount > 0 && productCount <= 100) {
       productsInCart[productIndexToModifyQuantity].quantity =
         event.target.value;
 
@@ -129,7 +146,12 @@ function changeQtt() {
 
       alert("Votre panier est à jour.");
       totalArticlesOfCart();
-      TotalPriceOfCart();
+      TotalPriceOfCart();}
+      else {
+        // Ajout d'un message d'erreur avec le DOM pour prévenir l'utilisateur de la valeur incorrect
+        alert('Merci de mettre une valeur entre 1 et 100 compris');
+        setTimeout('location.reload(true);', 400);
+     }
     });
   });
 }

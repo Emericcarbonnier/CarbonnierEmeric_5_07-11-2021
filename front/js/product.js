@@ -2,7 +2,8 @@ let params = new URL(window.location.href).searchParams;
 
 let newId = params.get('id');
 console.log (newId)
-
+const valueInput = document.getElementById('quantity');
+const valueSelect = document.getElementById('colors');
 // création des constante que l'ont va utilisé dans le html
 
 const img = document.getElementsByClassName('item__img')
@@ -53,8 +54,7 @@ fetch('http://localhost:3000/api/products/' + newId)
 
 addData.addEventListener('click', (event) => {
   event.preventDefault();
-
-
+  if (valueInput.value > 0 && valueInput.value <= 100 && valueSelect.value != ''){
 
 // récuperation des donnée du produit choisi
 
@@ -77,7 +77,7 @@ const addProductInCart = () => {
   // ont converti au format JSON
   localStorage.setItem('product', JSON.stringify(productInCart));
   }
-  
+ 
   let update = false;
   
   // s'il y a des produits enregistrés dans le localStorage
@@ -92,6 +92,7 @@ const addProductInCart = () => {
       update = true;
       confirmItemAddToCart();
     }
+ 
   });
 
   if (!update) {
@@ -107,4 +108,9 @@ const addProductInCart = () => {
     addProductInCart();
     confirmItemAddToCart();
   }
+}
+else {
+  alert('Merci de remplir toutes les informations demandées');
+  setTimeout('location.reload(true);', 400);
+}
 });
